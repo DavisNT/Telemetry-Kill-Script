@@ -1,11 +1,11 @@
 @echo off
 rem Display info and license
 color f0
-echo Telemetry Kill Script 1.0.0
+echo Telemetry Kill Script 1.1.0
 echo A tool for disabling Windows Telemetry (at least part of it).
 echo https://github.com/DavisNT/Telemetry-Kill-Script
 echo.
-echo Copyright (c) 2017 Davis Mosenkovs
+echo Copyright (c) 2017-2019 Davis Mosenkovs
 echo.
 echo Permission is hereby granted, free of charge, to any person obtaining a copy
 echo of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,9 @@ if not "%1"=="/AUTO" if not "%1"=="/auto" set /P accepted=Press enter if you agr
 if not "%accepted%"=="" goto :end
 echo.
 
+rem Check 64-bit environment on 64-bit Windows
+if not "%PROCESSOR_ARCHITEW6432%"=="" goto :wow
+
 rem Check admin rights
 net session >nul 2>nul
 if errorlevel 1 goto :noadmin
@@ -49,6 +52,10 @@ echo Changing permissions of Telemetry files...
 icacls %SystemRoot%\system32\CompatTelRunner.exe /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
 icacls %SystemRoot%\system32\GeneralTel.dll /deny *S-1-1-0:(X)
+if errorlevel 1 set errors=1
+echo.
+echo Setting diagnostic data level to Security/Basic (lowest possible)...
+reg add "HKLM\Software\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 if errorlevel 1 set errors=1
 echo.
 echo Disabling Telemetry service...
@@ -69,14 +76,24 @@ if "%errors%"=="1" goto :errors
 rem Success
 color f2
 echo Telemetry should be disabled now.
+echo You might need to reboot your computer for some of the changes to take effect.
 if not "%1"=="/AUTO" if not "%1"=="/auto" pause
 
 goto :end
 
-rem Errors occured
+rem Errors occurred
 :errors
 color fc
 echo Error(s) occurred, please review the script output!
+if not "%1"=="/AUTO" if not "%1"=="/auto" pause
+
+goto :end
+
+rem 32-bit environment on 64-bit Windows error
+:wow
+color fc
+echo This script must NOT be run from 32-bit environment on 64-bit Windows.
+echo Please run this script from 64-bit application (e.g. File Explorer window).
 if not "%1"=="/AUTO" if not "%1"=="/auto" pause
 
 goto :end
