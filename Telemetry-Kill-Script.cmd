@@ -1,7 +1,7 @@
 @echo off
 rem Display info and license
 color f0
-echo Telemetry Kill Script 1.1.0
+echo Telemetry Kill Script 1.2.0
 echo A tool for disabling Windows Telemetry (at least part of it).
 echo https://github.com/DavisNT/Telemetry-Kill-Script
 echo.
@@ -47,11 +47,19 @@ takeown /A /F %SystemRoot%\system32\CompatTelRunner.exe
 if errorlevel 1 set errors=1
 takeown /A /F %SystemRoot%\system32\GeneralTel.dll
 if errorlevel 1 set errors=1
+takeown /A /F %SystemRoot%\system32\CompatTel\*.exe
+if errorlevel 1 set errors=1
+takeown /A /F %SystemRoot%\system32\CompatTel\*.dll
+if errorlevel 1 set errors=1
 echo.
 echo Changing permissions of Telemetry files...
 icacls %SystemRoot%\system32\CompatTelRunner.exe /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
 icacls %SystemRoot%\system32\GeneralTel.dll /deny *S-1-1-0:(X)
+if errorlevel 1 set errors=1
+icacls %SystemRoot%\system32\CompatTel\*.exe /deny *S-1-1-0:(X)
+if errorlevel 1 set errors=1
+icacls %SystemRoot%\system32\CompatTel\*.dll /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
 echo.
 echo Setting diagnostic data level to Security/Basic (lowest possible)...
@@ -64,6 +72,7 @@ if errorlevel 1 set errors=1
 echo.
 echo Terminating Telemetry processes...
 taskkill /f /im CompatTelRunner*
+taskkill /f /im diagtrackrunner*
 taskkill /f /im rundll32* /fi "MODULES eq GeneralTel*"
 echo.
 echo Stopping Telemetry service...
