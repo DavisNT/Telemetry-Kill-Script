@@ -3,9 +3,9 @@ Telemetry Kill Script
 A tool for disabling Windows Telemetry (at least part of it) on Windows 
 7, 8, 8.1 and 10. 
 
-Version 1.2.0
+Version 1.2.1
 
-Copyright (c) 2017-2019 Davis Mosenkovs
+Copyright (c) 2017-2020 Davis Mosenkovs
 
 ## Introduction
 

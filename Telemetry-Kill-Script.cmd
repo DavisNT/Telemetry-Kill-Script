@@ -1,11 +1,11 @@
 @echo off
 rem Display info and license
 color f0
-echo Telemetry Kill Script 1.2.0
+echo Telemetry Kill Script 1.2.1
 echo A tool for disabling Windows Telemetry (at least part of it).
 echo https://github.com/DavisNT/Telemetry-Kill-Script
 echo.
-echo Copyright (c) 2017-2019 Davis Mosenkovs
+echo Copyright (c) 2017-2020 Davis Mosenkovs
 echo.
 echo Permission is hereby granted, free of charge, to any person obtaining a copy
 echo of this software and associated documentation files (the "Software"), to deal
@@ -43,23 +43,23 @@ if errorlevel 1 goto :noadmin
 rem Disable Telemetry
 set errors=0
 echo Taking ownership of Telemetry files...
-takeown /A /F %SystemRoot%\system32\CompatTelRunner.exe
+if exist %SystemRoot%\system32\CompatTelRunner.exe takeown /A /F %SystemRoot%\system32\CompatTelRunner.exe
 if errorlevel 1 set errors=1
-takeown /A /F %SystemRoot%\system32\GeneralTel.dll
+if exist %SystemRoot%\system32\GeneralTel.dll takeown /A /F %SystemRoot%\system32\GeneralTel.dll
 if errorlevel 1 set errors=1
-takeown /A /F %SystemRoot%\system32\CompatTel\*.exe
+if exist %SystemRoot%\system32\CompatTel\*.exe takeown /A /F %SystemRoot%\system32\CompatTel\*.exe
 if errorlevel 1 set errors=1
-takeown /A /F %SystemRoot%\system32\CompatTel\*.dll
+if exist %SystemRoot%\system32\CompatTel\*.dll takeown /A /F %SystemRoot%\system32\CompatTel\*.dll
 if errorlevel 1 set errors=1
 echo.
 echo Changing permissions of Telemetry files...
-icacls %SystemRoot%\system32\CompatTelRunner.exe /deny *S-1-1-0:(X)
+if exist %SystemRoot%\system32\CompatTelRunner.exe icacls %SystemRoot%\system32\CompatTelRunner.exe /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
-icacls %SystemRoot%\system32\GeneralTel.dll /deny *S-1-1-0:(X)
+if exist %SystemRoot%\system32\GeneralTel.dll icacls %SystemRoot%\system32\GeneralTel.dll /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
-icacls %SystemRoot%\system32\CompatTel\*.exe /deny *S-1-1-0:(X)
+if exist %SystemRoot%\system32\CompatTel\*.exe icacls %SystemRoot%\system32\CompatTel\*.exe /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
-icacls %SystemRoot%\system32\CompatTel\*.dll /deny *S-1-1-0:(X)
+if exist %SystemRoot%\system32\CompatTel\*.dll icacls %SystemRoot%\system32\CompatTel\*.dll /deny *S-1-1-0:(X)
 if errorlevel 1 set errors=1
 echo.
 echo Setting diagnostic data level to Security/Basic (lowest possible)...
