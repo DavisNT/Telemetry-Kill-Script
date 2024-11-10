@@ -1,11 +1,11 @@
 @echo off
 rem Display info and license
 color f0
-echo Telemetry Kill Script 1.2.1
+echo Telemetry Kill Script 1.2.2
 echo A tool for disabling Windows Telemetry (at least part of it).
 echo https://github.com/DavisNT/Telemetry-Kill-Script
 echo.
-echo Copyright (c) 2017-2020 Davis Mosenkovs
+echo Copyright (c) 2017-2024 Davis Mosenkovs
 echo.
 echo Permission is hereby granted, free of charge, to any person obtaining a copy
 echo of this software and associated documentation files (the "Software"), to deal

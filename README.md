@@ -1,11 +1,11 @@
 Telemetry Kill Script
 ===============
 A tool for disabling Windows Telemetry (at least part of it) on Windows 
-7, 8, 8.1 and 10. 
+7, 8, 8.1, 10 and 11. 
 
-Version 1.2.1
+Version 1.2.2
 
-Copyright (c) 2017-2020 Davis Mosenkovs
+Copyright (c) 2017-2024 Davis Mosenkovs
 
 ## Introduction
 
@@ -27,6 +27,24 @@ _Run as Administrator_).
 
 Most likely this script will have to be used again each time when Windows Update 
 updates Telemetry related files and/or service.
+
+### Automation using Task Scheduler
+
+To automatically run Telemetry Kill Script daily and on every system start (after reading and accepting `LICENSE`):
+1. Copy the file `Telemetry-Kill-Script.cmd` to the Program Files folder (usually `C:\Program Files`).
+2. Run Windows PowerShell as Administrator.
+3. In the PowerShell window execute the command-line to remove Mark of the Web from `Telemetry-Kill-Script.cmd`:
+```
+Remove-Item -Stream "Zone.Identifier" -Path "$env:ProgramFiles\Telemetry-Kill-Script.cmd"
+```
+4. In the PowerShell window execute the command-line to create a scheduled task for Telemetry Kill Script:
+```
+Register-ScheduledTask -TaskName "Telemetry Kill Script" -User "NT AUTHORITY\SYSTEM" -RunLevel Highest -Action $(New-ScheduledTaskAction -Execute """$env:ProgramFiles\Telemetry-Kill-Script.cmd""" -Argument "/auto") -Trigger @($(New-ScheduledTaskTrigger -AtStartup), $(New-ScheduledTaskTrigger -Daily -At 19:55)) -Settings $(New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -ExecutionTimeLimit $(New-TimeSpan -Hours 1))
+```
+
+To stop running Telemetry Kill Script automatically:
+1. Delete the file `Telemetry-Kill-Script.cmd` from the Program Files folder (usually `C:\Program Files`).
+2. Open Task Scheduler and delete the `Telemetry Kill Script` scheduled task.
 
 ## Notices
 
